@@ -83,3 +83,89 @@ If @Valid is missing, validation annotations like @NotBlank and @Size will not b
 ***Q5. Why must update/delete have {id} in the URL but create does not?***
 
 Update and delete require an ID because they operate on an existing resource. Create does not need an ID because the system generates it automatically when a new resource is created.
+
+## API Response Format
+
+All API endpoints return a standard response structure to ensure consistency across the application.
+
+### Success Response
+
+```json
+{
+  "statusCode": 200,
+  "message": "Category retrieved successfully",
+  "data": {
+    "id": 1,
+    "name": "Burgers"
+  },
+  "timestamp": "2026-06-19T18:30:45"
+}
+```
+
+### Success Response (List)
+
+```json
+{
+  "statusCode": 200,
+  "message": "Categories retrieved",
+  "data": [
+    {
+      "id": 1,
+      "name": "Burgers"
+    },
+    {
+      "id": 2,
+      "name": "Pizza"
+    }
+  ],
+  "timestamp": "2026-06-19T18:31:20"
+}
+```
+
+### Error Response
+
+```json
+{
+  "statusCode": 404,
+  "message": "Category not found with id: 9999",
+  "timestamp": "2026-06-19T18:32:10"
+}
+```
+
+### Validation Error Response
+
+```json
+{
+  "statusCode": 400,
+  "message": "Category name is required",
+  "timestamp": "2026-06-19T18:33:15"
+}
+```
+
+***Q1. What is a Java generic type? Why is <T> useful?***
+
+A generic type allows a class or method to work with different data types while maintaining type safety. <T> is useful because it makes code reusable and prevents unnecessary type casting.
+
+***Q2. What does Lombok @Builder generate behind the scenes?***
+
+@Builder automatically generates a builder class with methods for setting field values and constructing an object. It removes the need to write complex constructors manually.
+
+***Q3. What is the Builder design pattern? When to use it?***
+
+The Builder pattern is a way of creating objects step by step. It is useful when a class has many fields or optional values and constructors would become difficult to manage.
+
+***Q4. What is LocalDateTime? How is it different from Date?***
+
+LocalDateTime is a modern Java class used to represent a date and time without a time zone. Unlike Date, it is immutable, easier to use, and part of the Java Time API introduced in Java 8.
+
+***Q5. Why does a consistent response format matter to frontend developers?***
+
+A consistent response format makes it easier for frontend applications to process API responses because they always know where to find the status code, message, data, and timestamp.
+
+***Q6. What does @JsonInclude(JsonInclude.Include.NON_NULL) do?***
+
+It prevents fields with null values from being included in the JSON response, making responses cleaner and reducing unnecessary data.
+
+***Q7. What is a static factory method? Why use Response.success(...) instead of new Response<>()?***
+
+A static factory method is a static method used to create objects. Using Response.success(...) makes the code easier to read, hides object creation details, and ensures that response objects are created consistently throughout the application.
