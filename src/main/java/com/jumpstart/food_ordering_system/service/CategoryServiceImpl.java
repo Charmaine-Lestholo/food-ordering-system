@@ -1,10 +1,13 @@
 package com.jumpstart.food_ordering_system.service;
 
+
 import com.jumpstart.food_ordering_system.dto.CategoryDto;
 import com.jumpstart.food_ordering_system.entity.Category;
 import com.jumpstart.food_ordering_system.exception.CategoryNotFoundException;
 import com.jumpstart.food_ordering_system.repository.CategoryRepository;
+import com.jumpstart.food_ordering_system.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +17,20 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final MenuRepository menuRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(
+            CategoryRepository categoryRepository,
+            MenuRepository menuRepository) {
+
         this.categoryRepository = categoryRepository;
+        this.menuRepository = menuRepository;
     }
 
     @Override
     public List<CategoryDto> getAllCategories() {
+
         return categoryRepository.findAll()
                 .stream()
                 .map(category -> new CategoryDto(
@@ -87,6 +96,12 @@ public class CategoryServiceImpl implements CategoryService {
                         new CategoryNotFoundException(
                                 "Category not found with id: " + id
                         ));
+
+        if (menuRepository.existsByCategoryId(id)) {
+            throw new DataIntegrityViolationException(
+                    "Cannot delete category because it still contains menu items."
+            );
+        }
 
         categoryRepository.delete(category);
     }

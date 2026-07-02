@@ -18,9 +18,19 @@ public class Response<T> {
     private int statusCode;
     private String message;
     private T data;
+
+    // Pagination metadata
+    private Long totalElements;
+    private Integer totalPages;
+    private Integer number;
+    private Integer size;
+    private Boolean first;
+    private Boolean last;
+
     private LocalDateTime timestamp;
 
     public static <T> Response<T> success(String message, T data) {
+
         return Response.<T>builder()
                 .statusCode(200)
                 .message(message)
@@ -30,6 +40,7 @@ public class Response<T> {
     }
 
     public static <T> Response<T> created(String message, T data) {
+
         return Response.<T>builder()
                 .statusCode(201)
                 .message(message)
@@ -39,6 +50,7 @@ public class Response<T> {
     }
 
     public static <T> Response<T> error(int statusCode, String message) {
+
         return Response.<T>builder()
                 .statusCode(statusCode)
                 .message(message)
